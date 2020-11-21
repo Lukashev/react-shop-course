@@ -1,25 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Row, Col, Container } from 'react-bootstrap'
+import ProductList from './components/ProductList';
+import AppNavbar from './components/AppNavbar';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container className='mb-4 mt-4'>
+      <Row>
+        <Col md={12} className='mb-4'>
+          <AppNavbar />
+        </Col>
+      </Row>
+      <Row>
+        <Col md={9} xs={12} className='pl-0'>
+          <ProductList />
+        </Col>
+        <Col md={3} xs={12} className='pl-0'>
+          Cart
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
