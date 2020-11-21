@@ -14,11 +14,8 @@ function App() {
         </Col>
       </Row>
       <Row>
-        <Col md={9} xs={12} className='pl-0'>
+        <Col md={12} className='pl-0'>
           <ProductList />
-        </Col>
-        <Col md={3} xs={12} className='pl-0'>
-          Cart
         </Col>
       </Row>
     </Container>

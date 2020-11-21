@@ -1,10 +1,11 @@
-import React, { memo } from 'react'
-import { Card, Button, Container, Row, Col } from 'react-bootstrap'
+import React, { memo, useCallback } from 'react'
+import { Card, Button } from 'react-bootstrap'
+import isEqual from 'lodash/isEqual'
 import styled from 'styled-components'
 import Currency from 'react-currency-formatter'
-import { Product } from '../interfaces'
+import { Product, Action, CartItem } from '../interfaces'
 
-type Props = Product & { currency?: string }
+type Props = Product & { currency?: string, setMainState: (payload: any) => Action, cart: CartItem[] }
 
 const StyledCard = styled(Card)`
   min-height: 509px;
@@ -17,7 +18,12 @@ const StyledCard = styled(Card)`
 `
 
 const CardItem = (props: Props) => {
-  const { imageUrl, title, description, price, currency = 'USD' } = props
+  const { id, imageUrl, title, description, price, currency = 'USD', setMainState, cart } = props
+
+  const addToCart = useCallback(() => {
+    setMainState({ cart: [...cart, { id, quantity: 0 }] })
+  }, [setMainState, cart, id])
+
   return (
     <StyledCard className='mb-4'>
       <Card.Img variant="top" src={imageUrl} />
@@ -32,12 +38,18 @@ const CardItem = (props: Props) => {
             currency={currency}
           />
         </span>
-        <Button variant="primary">Add to cart</Button>
+        <Button 
+          variant="primary" 
+          onClick={addToCart}
+          disabled={!!cart.find(item => item.id === id)}
+          >Add to cart</Button>
       </Card.Body>
     </StyledCard>
   )
 }
 
-const propsAreEqual = (prevProps: Props, nextProps: Props): boolean => prevProps.id === nextProps.id
+const propsAreEqual = (prevProps: Props, nextProps: Props): boolean => {
+  return isEqual(prevProps, nextProps)
+}
 
 export default memo(CardItem, propsAreEqual)

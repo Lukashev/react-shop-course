@@ -12,7 +12,7 @@ interface Actions {
 type Props = ReducerState & { actions: Actions }
 
 const ProductList = (props: Props) => {
-  const { actions: { fetchProductList }, products, currency } = props
+  const { actions: { fetchProductList, setMainState }, products, currency, cart } = props
   const [offset, setOffset] = useState<number>(0)
 
   useEffect(() => {
@@ -20,13 +20,15 @@ const ProductList = (props: Props) => {
     fetchProductList(offset)
   }, [offset, fetchProductList])
 
+  const cardProps = { currency, setMainState, cart }
+
   return (
     <Container>
       <Row>
         {products.map(item => {
           return (
-            <Col lg={4} md={6} sm={6} xs={12} key={item.id}>
-              <Card {...item} currency={currency} />
+            <Col lg={3} md={6} sm={6} xs={12} key={item.id}>
+              <Card {...item} {...cardProps} />
             </Col>
           )
         })}

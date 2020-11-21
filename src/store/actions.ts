@@ -11,7 +11,7 @@ export const setMainState = (payload: any): Action => ({
 export const fetchProductList = (offset: number = 0) => async (dispatch: ThunkDispatch<ReducerState, any, Action>): Promise<void> => {
   try {
     dispatch(setMainState({ loading: true }))
-    const result: AxiosResponse = await Api.get(`/products?_start=${offset}&_end=${offset + 6}`)
+    const result: AxiosResponse = await Api.get(`/products?_start=${offset}&_end=${offset + 4}`)
     dispatch(setMainState({ products: result.data }))
   } catch (e) {
     console.error(e)

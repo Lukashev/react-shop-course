@@ -7,6 +7,11 @@ export interface Action {
   payload: any
 }
 
+export interface CartItem {
+  id: number,
+  quantity: number
+}
+
 export interface Product {
   readonly id: number
   readonly title: string
@@ -17,7 +22,7 @@ export interface Product {
 
 export interface ReducerState {
   readonly products: Product[]
-  cart: Product[]
+  cart: CartItem[]
   loading: boolean
   currency: CurrencyType
 }
