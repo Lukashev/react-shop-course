@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { Modal, Button } from 'react-bootstrap'
 
 interface Props {
@@ -8,16 +9,18 @@ interface Props {
   children?: JSX.Element
   btnLabel?: string
   btnClick?: () => void
+  footer?: JSX.Element
 }
 
 const CartModal = (props: Props) => {
   const {
     visible = false,
-    handleClose = () => {},
+    handleClose = () => { },
     title = 'Title',
     children = 'Content',
     btnLabel = 'OK',
-    btnClick = () => {}
+    btnClick = () => { },
+    footer
   } = props
   return (
     <Modal show={visible} onHide={handleClose} animation={false}>
@@ -27,7 +30,8 @@ const CartModal = (props: Props) => {
       <Modal.Body>
         {children}
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer className='d-flex align-items-center justify-content-between'>
+        {footer}
         <Button variant="secondary" onClick={btnClick}>
           {btnLabel}
         </Button>

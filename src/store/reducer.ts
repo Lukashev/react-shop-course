@@ -1,8 +1,10 @@
 import { Action, ReducerState } from "../interfaces";
 
+const storageCart = localStorage.getItem('cart')
+
 export const initialState: ReducerState = {
   products: [],
-  cart: [],
+  cart: storageCart ? JSON.parse(storageCart) : [],
   loading: false,
   currency: 'USD'
 }

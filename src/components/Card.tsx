@@ -21,7 +21,10 @@ const CardItem = (props: Props) => {
   const { id, imageUrl, title, description, price, currency = 'USD', setMainState, cart } = props
 
   const addToCart = useCallback(() => {
-    setMainState({ cart: [...cart, { id, quantity: 0 }] })
+    const payload = [...cart, { id, quantity: 1 }]
+    setMainState({ cart: payload })
+    // update localStorage 
+    localStorage.setItem('cart', JSON.stringify(payload))
   }, [setMainState, cart, id])
 
   return (
