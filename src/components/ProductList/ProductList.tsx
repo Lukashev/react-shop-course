@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { ThunkDispatch } from 'redux-thunk'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ReducerState, Action } from '../../interfaces'
@@ -12,13 +12,11 @@ interface Actions {
 type Props = ReducerState & { actions: Actions }
 
 const ProductList = (props: Props) => {
-  const { actions: { fetchProductList, setMainState }, products, currency, cart } = props
-  const [offset, setOffset] = useState<number>(0)
+  const { actions: { fetchProductList, setMainState }, products, currency, cart, fetchOffset, searchString } = props
 
   useEffect(() => {
-    console.log('fetch')
-    fetchProductList(offset)
-  }, [offset, fetchProductList])
+    fetchProductList(fetchOffset)
+  }, [fetchOffset, fetchProductList, searchString])
 
   const cardProps = { currency, setMainState, cart }
 

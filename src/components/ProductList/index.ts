@@ -5,11 +5,10 @@ import { ReducerState } from "../../interfaces";
 import * as mainActions from '../../store/actions' 
 
 const mapStateToProps = (state: ReducerState): ReducerState => {
-  console.log('STORE', state)
   return { ...state }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   actions: bindActionCreators(mainActions, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductList)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductList as any)

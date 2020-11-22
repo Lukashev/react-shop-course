@@ -1,6 +1,7 @@
 import React, { useState, useMemo, SetStateAction, Dispatch } from 'react'
 import { Navbar, Form, FormControl, Button, Badge, Container, Row, Col } from 'react-bootstrap'
 import Currency from 'react-currency-formatter'
+import debounce from 'lodash/debounce'
 import { ReducerState, CartItem, Product, Action } from '../../interfaces'
 import CartModal from '../CartModal'
 
@@ -101,12 +102,19 @@ const AppNavbar = (props: Props) => {
     )
   }, [totalAmount, currency])
 
+  const onSearch = ({ target }: any): void => {
+    setMainState({
+      fetchOffset: 0,
+      searchString: target.value
+    })
+  }
+
   return (
     <Navbar bg="dark" variant="dark">
       <Navbar.Brand href="/">React Shop</Navbar.Brand>
       <div className="d-flex">
         <Form inline>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+          <FormControl onChange={debounce(onSearch, 1000)} type="text" placeholder="Search" className="mr-sm-2" />
         </Form>
         <Button variant="danger pl-4 pr-4" onClick={triggerState(setModalVisible, true)}>
           <i className="fas fa-shopping-cart"></i>

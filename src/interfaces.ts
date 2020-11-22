@@ -25,4 +25,6 @@ export interface ReducerState {
   cart: CartItem[]
   loading: boolean
   currency: CurrencyType
+  fetchOffset: number
+  searchString?: string
 }

@@ -6,7 +6,9 @@ export const initialState: ReducerState = {
   products: [],
   cart: storageCart ? JSON.parse(storageCart) : [],
   loading: false,
-  currency: 'USD'
+  currency: 'USD',
+  fetchOffset: 0,
+  searchString: ''
 }
 
 export default (state: ReducerState = initialState, action: Action) => {
