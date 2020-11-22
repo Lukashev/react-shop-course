@@ -40,7 +40,7 @@ const AppNavbar = (props: Props) => {
     return (
       <Container>
         <Row>
-          {cartItems.map(({ id, imageUrl, title, quantity, price }) => (
+          {cartItems.length ? cartItems.map(({ id, imageUrl, title, quantity, price }) => (
             <Col md={12} key={id}>
               <div className="d-flex w-100 align-items-center justify-content-between">
                 <div className="d-flex align-items-center">
@@ -73,7 +73,7 @@ const AppNavbar = (props: Props) => {
               </div>
               <hr></hr>
             </Col>
-          ))}
+          )) : 'Cart is empty...'}
         </Row>
       </Container>
     )
