@@ -8,11 +8,11 @@ export const setMainState = (payload: any): Action => ({
   payload
 })
 
-export const fetchProductList = (offset: number = 0) => async (dispatch: ThunkDispatch<ReducerState, any, Action>, getState: () => ReducerState): Promise<void> => {
+export const fetchProductList = () => async (dispatch: ThunkDispatch<ReducerState, any, Action>, getState: () => ReducerState): Promise<void> => {
   try {
     dispatch(setMainState({ loading: true }))
     const { searchString } = getState()
-    const result: AxiosResponse = await Api.get(`/products?_start=${offset}&_end=${offset + 4}&title_like=${searchString}`)
+    const result: AxiosResponse = await Api.get(`/products?title_like=${searchString}`)
     dispatch(setMainState({ products: result.data }))
   } catch (e) {
     console.error(e)
