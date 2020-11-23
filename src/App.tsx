@@ -3,6 +3,7 @@ import { Row, Col, Container } from 'react-bootstrap'
 import ProductList from './components/ProductList';
 import AppNavbar from './components/AppNavbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-credit-cards/es/styles-compiled.css'
 import './App.css';
 
 function App() {

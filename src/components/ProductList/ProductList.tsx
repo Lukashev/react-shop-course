@@ -39,11 +39,12 @@ const ProductList = (props: Props) => {
     }
     return items
   }, [activePage, products.length])
-
+  const pagStart = activePage * PAGE_LIMIT
+  const pagEnd = pagStart + PAGE_LIMIT
   return (
-    <Container>
+    <Container className='pr-0'>
       <Row>
-        {products.length ? products.slice(activePage, activePage + PAGE_LIMIT).map(item => {
+        {products.length ? products.slice(pagStart, pagEnd).map(item => {
           return (
             <Col lg={3} md={6} sm={6} xs={12} key={item.id}>
               <Card {...item} {...cardProps} />

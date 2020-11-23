@@ -1,16 +1,24 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 
 interface Props {
   visible: boolean
   handleClose: () => void
   title?: string
   children?: JSX.Element
-  btnLabel?: string
-  btnClick?: () => void
   footer?: JSX.Element
+  height?: number
 }
+
+const StyledModal = styled(Modal)`
+  & .modal {
+    &-body {
+      max-height: ${(props: Props) => props.height}px;
+      overflow: auto;
+    }
+  }
+`
 
 const CartModal = (props: Props) => {
   const {
@@ -18,12 +26,11 @@ const CartModal = (props: Props) => {
     handleClose = () => { },
     title = 'Title',
     children = 'Content',
-    btnLabel = 'OK',
-    btnClick = () => { },
-    footer
+    footer,
+    height
   } = props
   return (
-    <Modal show={visible} onHide={handleClose} animation={false}>
+    <StyledModal show={visible} onHide={handleClose} animation={false} height={height}>
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
@@ -32,11 +39,8 @@ const CartModal = (props: Props) => {
       </Modal.Body>
       <Modal.Footer className='d-flex align-items-center justify-content-between'>
         {footer}
-        <Button variant="secondary" onClick={btnClick}>
-          {btnLabel}
-        </Button>
       </Modal.Footer>
-    </Modal>
+    </StyledModal>
   )
 }
 

@@ -2,11 +2,12 @@ import React, { useState, useMemo, SetStateAction, Dispatch } from 'react'
 import { Navbar, Form, FormControl, Button, Badge, Container, Row, Col } from 'react-bootstrap'
 import Currency from 'react-currency-formatter'
 import debounce from 'lodash/debounce'
-import { ReducerState, CartItem, Product, Action } from '../../interfaces'
+import { ReducerState, CartItem, Product, Action, CurrencyType } from '../../interfaces'
 import CartModal from '../CartModal'
 import { currencyStats } from '../../utils/helpers'
+import PaymentCard from '../PaymentCard'
 
-type Props = ReducerState & { setMainState: (payload: any) => Action }
+type Props = ReducerState & { setMainState: (payload: any) => Action, makePayment: (payload: { amount: number, currency: CurrencyType }) => void }
 type CartBodyItem = CartItem & Product
 
 const triggerState = (setState: Dispatch<SetStateAction<boolean>>, value: boolean) => {
@@ -16,8 +17,9 @@ const triggerState = (setState: Dispatch<SetStateAction<boolean>>, value: boolea
 }
 
 const AppNavbar = (props: Props) => {
-  const { cart, products, currency, setMainState } = props
+  const { cart, products, currency, setMainState, makePayment } = props
   const [modalVisible, setModalVisible] = useState<boolean>(false)
+  const [paymentCardVisible, setPaymentCardVisible] = useState<boolean>(false)
 
   const changeCartState = (newCart: CartItem[]): void => {
     localStorage.setItem('cart', JSON.stringify(newCart))
@@ -39,8 +41,8 @@ const AppNavbar = (props: Props) => {
 
   const modalBody = useMemo(() => {
     const cartItems: CartBodyItem[] = cart.map(item => ({ ...products.find(p => p.id === item.id), ...item })) as CartBodyItem[]
-    return (
-      <Container>
+    return !paymentCardVisible ? (
+     <Container>
         <Row>
           {cartItems.length ? cartItems.map(({ id, imageUrl, title, quantity, price }) => (
             <Col md={12} key={id}>
@@ -78,8 +80,10 @@ const AppNavbar = (props: Props) => {
           )) : 'Cart is empty...'}
         </Row>
       </Container>
+    ) : (
+      <PaymentCard />
     )
-  }, [cart, products, currency]) // eslint-disable-line
+  }, [cart, products, currency, paymentCardVisible]) // eslint-disable-line
 
   const totalAmount: number = useMemo((): number => {
     const result = cart.reduce((acc: number, item) => {
@@ -89,19 +93,43 @@ const AppNavbar = (props: Props) => {
     return result
   }, [cart, products])
 
+  const checkoutBtnClick = (): void => {
+    setPaymentCardVisible(true)
+  }
+
+  const backBtnClick = (): void => {
+    setPaymentCardVisible(false)
+  }
+
+  const completeOrder = (): void => {
+    makePayment({ amount: totalAmount, currency })
+  }
+
   const modalFooter = useMemo(() => {
     return (
-      <div className="d-flex align-items-center">
-        <h4 className='mr-2'>Total: </h4>
-        <span>
-          <Currency
-            currency={currency}
-            quantity={totalAmount * currencyStats[currency]}
-          />
-        </span>
+      <div className="d-flex align-items-center justify-content-between w-100">
+        <div className="d-flex align-items-center">
+          <h4 className='mr-2'>Total: </h4>
+          <span>
+            <Currency
+              currency={currency}
+              quantity={totalAmount * currencyStats[currency]}
+            />
+          </span>
+        </div>
+        <div className="d-flex align-items-center">
+          {paymentCardVisible && (
+            <Button variant="secondary" onClick={backBtnClick} className='mr-2'>
+              Back
+            </Button>
+          )}
+          <Button variant={!paymentCardVisible ? 'secondary' : 'success'} disabled={!cart.length} onClick={!paymentCardVisible ? checkoutBtnClick : completeOrder}>
+            {!paymentCardVisible ? 'Checkout' : 'Pay'}
+          </Button>
+        </div>
       </div>
     )
-  }, [totalAmount, currency])
+  }, [totalAmount, currency, paymentCardVisible, cart.length])
 
   const onSearch = ({ target }: any): void => {
     setMainState({
@@ -110,9 +138,9 @@ const AppNavbar = (props: Props) => {
     })
   }
 
-  const onCurrencyChange = ({ target }: any): void => {
+  const onSelectChange = (key: string) => ({ target }: any): void => {
     setMainState({
-      currency: target.value
+      [key]: target.value
     })
   }
 
@@ -134,19 +162,31 @@ const AppNavbar = (props: Props) => {
             as="select"
             className="ml-2"
             custom
-            onChange={onCurrencyChange}
+            onChange={onSelectChange('currency')}
           >
             <option value="USD">USD Dollar</option>
             <option value="EUR">EUR Euro</option>
+          </Form.Control>
+          <Form.Label className="my-1 mr-2 ml-2 text-light">
+            Sort by:
+          </Form.Label>
+          <Form.Control
+            as="select"
+            className="ml-0"
+            custom
+            onChange={onSelectChange('sortBy')}
+          >
+            <option value="LOW">Price: Low to High</option>
+            <option value="HIGH">Price: High to Low</option>
           </Form.Control>
         </Form>
       </div>
       <CartModal
         title='Shopping Cart'
         visible={modalVisible}
-        btnLabel='Checkout'
         handleClose={triggerState(setModalVisible, false)}
         footer={modalFooter}
+        height={paymentCardVisible ? 526 : 281}
       >
         {modalBody}
       </CartModal>

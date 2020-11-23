@@ -8,7 +8,14 @@ export const initialState: ReducerState = {
   loading: false,
   currency: 'USD',
   fetchOffset: 0,
-  searchString: ''
+  searchString: '',
+  sortBy: 'LOW',
+  paymentDetails: {
+    cvc: '',
+    name: '',
+    expiry: '',
+    number: ''
+  }
 }
 
 export default (state: ReducerState = initialState, action: Action) => {
@@ -17,6 +24,6 @@ export default (state: ReducerState = initialState, action: Action) => {
     case 'SET_MAIN_STATE':
       return { ...state, ...payload }
     default:
-      return state  
+      return state
   }
 }
