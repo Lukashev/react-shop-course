@@ -1,6 +1,6 @@
 type ActionType = 'SET_MAIN_STATE'
 
-type CurrencyType = 'USD' | 'EUR'
+export type CurrencyType = 'USD' | 'EUR'
 
 export interface Action {
   type: ActionType,

@@ -3,9 +3,10 @@ import { Card, Button } from 'react-bootstrap'
 import isEqual from 'lodash/isEqual'
 import styled from 'styled-components'
 import Currency from 'react-currency-formatter'
-import { Product, Action, CartItem } from '../interfaces'
+import { Product, Action, CartItem, CurrencyType } from '../interfaces'
+import { currencyStats } from '../utils/helpers'
 
-type Props = Product & { currency?: string, setMainState: (payload: any) => Action, cart: CartItem[] }
+type Props = Product & { currency?: CurrencyType, setMainState: (payload: any) => Action, cart: CartItem[] }
 
 const StyledCard = styled(Card)`
   min-height: 509px;
@@ -23,7 +24,7 @@ const CardItem = (props: Props) => {
   const addToCart = useCallback(() => {
     const payload = [...cart, { id, quantity: 1 }]
     setMainState({ cart: payload })
-    // update localStorage 
+    // update localStorage
     localStorage.setItem('cart', JSON.stringify(payload))
   }, [setMainState, cart, id])
 
@@ -37,12 +38,12 @@ const CardItem = (props: Props) => {
         </Card.Text>
         <span className='card-price font-weight-bold mb-2'>
           <Currency
-            quantity={+price}
+            quantity={+price * currencyStats[currency]}
             currency={currency}
           />
         </span>
-        <Button 
-          variant="primary" 
+        <Button
+          variant="primary"
           onClick={addToCart}
           disabled={!!cart.find(item => item.id === id)}
           >Add to cart</Button>

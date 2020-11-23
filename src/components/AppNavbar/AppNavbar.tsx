@@ -4,6 +4,7 @@ import Currency from 'react-currency-formatter'
 import debounce from 'lodash/debounce'
 import { ReducerState, CartItem, Product, Action } from '../../interfaces'
 import CartModal from '../CartModal'
+import { currencyStats } from '../../utils/helpers'
 
 type Props = ReducerState & { setMainState: (payload: any) => Action }
 type CartBodyItem = CartItem & Product
@@ -63,7 +64,7 @@ const AppNavbar = (props: Props) => {
                   >+</Button>
                   <Currency
                     currency={currency}
-                    quantity={+price}
+                    quantity={+price * currencyStats[currency]}
                   />
                   <Button
                     variant='outline-danger'
@@ -83,7 +84,7 @@ const AppNavbar = (props: Props) => {
   const totalAmount: number = useMemo((): number => {
     const result = cart.reduce((acc: number, item) => {
       const productItem = products.find(p => p.id === item.id) as Product
-      return acc + (productItem ? +productItem.price : 0) * item.quantity 
+      return acc + (productItem ? +productItem.price : 0) * item.quantity
     }, 0)
     return result
   }, [cart, products])
@@ -95,7 +96,7 @@ const AppNavbar = (props: Props) => {
         <span>
           <Currency
             currency={currency}
-            quantity={totalAmount}
+            quantity={totalAmount * currencyStats[currency]}
           />
         </span>
       </div>
@@ -106,6 +107,12 @@ const AppNavbar = (props: Props) => {
     setMainState({
       fetchOffset: 0,
       searchString: target.value
+    })
+  }
+
+  const onCurrencyChange = ({ target }: any): void => {
+    setMainState({
+      currency: target.value
     })
   }
 
@@ -122,6 +129,17 @@ const AppNavbar = (props: Props) => {
             <Badge variant="light ml-1">{cart.length}</Badge>
           </small>
         </Button>
+        <Form inline>
+          <Form.Control
+            as="select"
+            className="ml-2"
+            custom
+            onChange={onCurrencyChange}
+          >
+            <option value="USD">USD Dollar</option>
+            <option value="EUR">EUR Euro</option>
+          </Form.Control>
+        </Form>
       </div>
       <CartModal
         title='Shopping Cart'

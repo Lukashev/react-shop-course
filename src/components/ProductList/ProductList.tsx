@@ -43,13 +43,13 @@ const ProductList = (props: Props) => {
   return (
     <Container>
       <Row>
-        {products.slice(activePage, activePage + PAGE_LIMIT).map(item => {
+        {products.length ? products.slice(activePage, activePage + PAGE_LIMIT).map(item => {
           return (
             <Col lg={3} md={6} sm={6} xs={12} key={item.id}>
               <Card {...item} {...cardProps} />
             </Col>
           )
-        })}
+        }) : <h4 className='pl-3'>Products not found</h4>}
       </Row>
       <Pagination className='justify-content-center'>
         {pagItems}
